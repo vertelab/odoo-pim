@@ -23,7 +23,10 @@ class TestCompletenessScore(TransactionCase):
                 {
                     "name": name,
                     "create_variant": "no_variant",
-                    "value_ids": [(0, 0, {"name": f"{name}1"})],
+                    "value_ids": [
+                        (0, 0, {"name": f"{name}1"}),
+                        (0, 0, {"name": f"{name}2"}),
+                    ],
                 }
             )
         cls.attr_a, cls.attr_b, cls.attr_c, cls.attr_d = cls.attrs
@@ -157,7 +160,13 @@ class TestCompletenessScore(TransactionCase):
 
     def test_inherited_counts_as_filled_but_is_reported(self):
         self._rule([(a, 1) for a in self.attrs])
-        # The base value comes from the single variant value on the template.
+        # Narrow every attribute line to one of its values: that is a base
+        # value in pim_channel's sense, so all four are filled by inheritance.
+        for attr in self.attrs:
+            line = self.product.attribute_line_ids.filtered(
+                lambda l, a=attr: l.attribute_id == a
+            )
+            line.write({"value_ids": [(6, 0, attr.value_ids[:1].ids)]})
         values = self.Completeness._compute_completeness(
             self.product, self.channel, self.lang
         )

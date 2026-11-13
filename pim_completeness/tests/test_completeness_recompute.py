@@ -22,7 +22,7 @@ class TestCompletenessRecompute(TransactionCase):
             {
                 "name": "A",
                 "create_variant": "no_variant",
-                "value_ids": [(0, 0, {"name": "A1"})],
+                "value_ids": [(0, 0, {"name": "A1"}), (0, 0, {"name": "A2"})],
             }
         )
         cls.env["pim.attribute.scope"].create(
@@ -106,10 +106,11 @@ class TestCompletenessRecompute(TransactionCase):
         self.product_a._pim_write_channel_value(
             self.attr, self.channel, self.lang, False
         )
-        # Base value still exists, so the attribute is inherited, not empty.
+        # No base value (the line still offers every value), so clearing the
+        # channel value leaves the attribute empty.
         row = self._row(self.product_a)
-        self.assertEqual(row.percentage, 100.0)
-        self.assertEqual(row.inherited_count, 1)
+        self.assertEqual(row.percentage, 0.0)
+        self.assertEqual(row.inherited_count, 0)
 
     def test_list_price_does_not_recompute(self):
         self.product_a._pim_write_channel_value(
@@ -169,8 +170,11 @@ class TestCompletenessRecompute(TransactionCase):
         self.product_a._pim_write_channel_value(
             self.attr, self.channel, self.lang, self.attr.value_ids[:1].name
         )
-        product = self.product_a.with_context(pim_channel_id=self.channel.id)
+        product = self.product_a.with_context(
+            pim_channel_id=self.channel.id, lang=self.lang.code
+        )
         product._compute_pim_completeness()
+        # The rule is inherited from the category; the score row exists.
         self.assertEqual(product.pim_completeness_state, "ok")
         self.assertEqual(product.pim_completeness_percentage, 100.0)
         self.assertEqual(product.pim_completeness_required, 1)

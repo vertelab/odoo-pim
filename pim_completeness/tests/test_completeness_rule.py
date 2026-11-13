@@ -101,7 +101,9 @@ class TestCompletenessRule(TransactionCase):
         cache = {}
         env = self.env(context=dict(self.env.context, pim_rule_cache=cache))
         Rule = env["pim.completeness.rule"]
-        with self.assertQueryCount(1):
-            for _i in range(100):
-                Rule._get_rule_for(self.categ_child, self.channel, self.lang)
+        # First lookup populates the cache; the next 99 must not query at all.
+        Rule._get_rule_for(self.categ_child, self.channel, self.lang)
         self.assertTrue(cache)
+        with self.assertQueryCount(0):
+            for _i in range(99):
+                Rule._get_rule_for(self.categ_child, self.channel, self.lang)

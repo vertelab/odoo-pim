@@ -4,7 +4,7 @@
 {
     "name": "PIM Channel",
     "summary": "Channel scoping of product attributes with explicit fallback",
-    "version": "18.0.1.0.1",
+    "version": "18.0.1.0.2",
     "category": "PIM",
     "license": "AGPL-3",
     "author": "Vertel AB,Odoo Community Association (OCA)",

@@ -85,8 +85,14 @@ class ProductTemplate(models.Model):
         """Return the non-channel (base) value of an attribute.
 
         Core ``product.attribute`` is a variant attribute; its base value is
-        carried by the template attribute lines. Attributes that are not
-        variant attributes have no base value in core.
+        carried by the template attribute lines. A line with a single value
+        is *not* a base value: Odoo writes single-value attributes on every
+        variant automatically (``_create_variant_ids``), so "one option
+        exists" says nothing about whether anyone filled it in. Only a line
+        that has been narrowed to one value out of several carries a choice.
+
+        An attribute whose key is not on the template at all has no base
+        value either.
         """
         self.ensure_one()
         line = self.attribute_line_ids.filtered(
@@ -94,10 +100,14 @@ class ProductTemplate(models.Model):
         )[:1]
         if not line:
             return False
-        values = line.product_template_value_ids.filtered("ptav_active")
-        if len(values) == 1:
-            return values.product_attribute_value_id
-        return False
+        active = line.product_template_value_ids.filtered("ptav_active")
+        if len(active) != 1:
+            return False
+        # The line must have been narrowed: the attribute offers more values
+        # than the one left on the line.
+        if len(attribute.value_ids) <= 1:
+            return False
+        return active.product_attribute_value_id
 
     @api.depends_context("pim_channel_id")
     def _compute_pim_channel_id(self):

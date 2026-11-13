@@ -24,7 +24,7 @@ class TestChannelScope(TransactionCase):
                 "name": "Lång beskrivning",
                 "display_type": "radio",
                 "create_variant": "no_variant",
-                "value_ids": [(0, 0, {"name": "Bas"})],
+                "value_ids": [(0, 0, {"name": "Bas"}), (0, 0, {"name": "Alt"})],
             }
         )
         cls.channel_web = cls.Channel.create(
@@ -51,7 +51,9 @@ class TestChannelScope(TransactionCase):
                         0,
                         {
                             "attribute_id": cls.attribute.id,
-                            "value_ids": [(6, 0, cls.attribute.value_ids.ids)],
+                            "value_ids": [
+                                (6, 0, cls.attribute.value_ids[:1].ids)
+                            ],
                         },
                     )
                 ],
