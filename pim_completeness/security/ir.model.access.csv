@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pim_completeness_rule_user,pim.completeness.rule.user,model_pim_completeness_rule,base.group_user,1,0,0,0
+access_pim_completeness_rule_manager,pim.completeness.rule.manager,model_pim_completeness_rule,group_pim_completeness_manager,1,1,1,1
+access_pim_completeness_rule_line_user,pim.completeness.rule.line.user,model_pim_completeness_rule_line,base.group_user,1,0,0,0
+access_pim_completeness_rule_line_manager,pim.completeness.rule.line.manager,model_pim_completeness_rule_line,group_pim_completeness_manager,1,1,1,1
+access_pim_completeness_user,pim.completeness.user,model_pim_completeness,base.group_user,1,0,0,0
+access_pim_completeness_manager,pim.completeness.manager,model_pim_completeness,group_pim_completeness_manager,1,1,1,1

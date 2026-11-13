@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Vertel AB
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!-- Completeness panel on the product form -->
+    <record id="product_template_form_view_pim_completeness" model="ir.ui.view">
+        <field name="name">product.template.form.pim.completeness</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="Completeness"
+                    name="pim_completeness"
+                    groups="pim_completeness.group_pim_completeness_user"
+                >
+                    <group>
+                        <group>
+                            <field name="pim_completeness_percentage" widget="progressbar" />
+                            <field name="pim_completeness_state" widget="badge" />
+                        </group>
+                        <group>
+                            <field name="pim_completeness_filled" />
+                            <field name="pim_completeness_required" />
+                            <field name="pim_completeness_inherited" />
+                        </group>
+                    </group>
+                    <group string="Missing Attributes">
+                        <field name="pim_completeness_missing" nolabel="1" colspan="2" />
+                    </group>
+                    <div class="text-muted">Completeness is always shown for a channel and a language. Select a channel in the context to see a value.</div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Completeness column in the product list -->
+    <record id="product_template_tree_view_pim_completeness" model="ir.ui.view">
+        <field name="name">product.template.list.pim.completeness</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field
+                    name="pim_completeness_percentage"
+                    widget="progressbar"
+                    optional="hide"
+                    groups="pim_completeness.group_pim_completeness_user"
+                />
+            </field>
+        </field>
+    </record>
+
+    <!-- Filters -->
+    <record id="product_template_search_view_pim_completeness" model="ir.ui.view">
+        <field name="name">product.template.search.pim.completeness</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view" />
+        <field name="arch" type="xml">
+            <filter name="filter_to_sell" position="after">
+                <separator />
+                <filter
+                    name="pim_below_threshold"
+                    string="Incomplete in channel"
+                    domain="[('pim_completeness_state', '=', 'below_threshold')]"
+                    groups="pim_completeness.group_pim_completeness_user"
+                    help="Products with a rule whose completeness is below the channel threshold. A product without a rule is not incomplete."
+                />
+                <filter
+                    name="pim_no_rule"
+                    string="No rule for channel"
+                    domain="[('pim_completeness_state', '=', 'no_rule')]"
+                    groups="pim_completeness.group_pim_completeness_user"
+                />
+            </filter>
+        </field>
+    </record>
+</odoo>

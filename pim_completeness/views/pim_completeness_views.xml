@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Vertel AB
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="pim_completeness_view_list" model="ir.ui.view">
+        <field name="name">pim.completeness.list</field>
+        <field name="model">pim.completeness</field>
+        <field name="arch" type="xml">
+            <list string="Completeness">
+                <field name="product_tmpl_id" />
+                <field name="channel_id" />
+                <field name="lang_id" />
+                <field name="percentage" widget="progressbar" />
+                <field name="filled_count" />
+                <field name="required_count" />
+                <field name="inherited_count" />
+                <field name="state" widget="badge" />
+            </list>
+        </field>
+    </record>
+
+    <record id="pim_completeness_view_search" model="ir.ui.view">
+        <field name="name">pim.completeness.search</field>
+        <field name="model">pim.completeness</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_tmpl_id" />
+                <field name="channel_id" />
+                <filter name="below" string="Below Threshold" domain="[('state', '=', 'below_threshold')]" />
+                <filter name="ready" string="Ready" domain="[('state', '=', 'ok')]" />
+                <group expand="0" string="Group By">
+                    <filter name="group_channel" string="Channel" context="{'group_by': 'channel_id'}" />
+                    <filter name="group_state" string="State" context="{'group_by': 'state'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="pim_completeness_action" model="ir.actions.act_window">
+        <field name="name">Completeness</field>
+        <field name="res_model">pim.completeness</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem
+        id="pim_completeness_menu"
+        name="Completeness"
+        parent="pim_channel.pim_channel_menu_root"
+        action="pim_completeness_action"
+        sequence="20"
+    />
+</odoo>

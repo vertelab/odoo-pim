@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Vertel AB
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="group_pim_completeness_user" model="res.groups">
+        <field name="name">PIM Completeness User</field>
+        <field name="category_id" ref="pim_channel.module_category_pim_channel" />
+        <field name="comment">Read completeness scores and run a recompute.</field>
+    </record>
+
+    <record id="group_pim_completeness_manager" model="res.groups">
+        <field name="name">PIM Completeness Manager</field>
+        <field name="category_id" ref="pim_channel.module_category_pim_channel" />
+        <field name="implied_ids" eval="[(4, ref('group_pim_completeness_user')), (4, ref('pim_channel.group_pim_channel_manager'))]" />
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+        <field name="comment">Define completeness rules and thresholds.</field>
+    </record>
+</odoo>
