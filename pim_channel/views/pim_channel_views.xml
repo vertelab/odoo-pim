@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Vertel AB
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="pim_channel_view_list" model="ir.ui.view">
+        <field name="name">pim.channel.list</field>
+        <field name="model">pim.channel</field>
+        <field name="arch" type="xml">
+            <list string="Channels">
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="code" />
+                <field name="lang_id" />
+                <field name="currency_id" />
+                <field name="website_id" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="active" widget="boolean_toggle" />
+            </list>
+        </field>
+    </record>
+
+    <record id="pim_channel_view_form" model="ir.ui.view">
+        <field name="name">pim.channel.form</field>
+        <field name="model">pim.channel</field>
+        <field name="arch" type="xml">
+            <form string="Channel">
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="text-bg-danger"
+                        invisible="active"
+                    />
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1>
+                            <field name="name" placeholder="e.g. Web" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code" placeholder="e.g. web" />
+                            <field name="lang_id" />
+                            <field name="currency_id" />
+                        </group>
+                        <group>
+                            <field name="website_id" />
+                            <field name="company_id" groups="base.group_multi_company" />
+                            <field name="sequence" />
+                            <field name="active" widget="boolean_toggle" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Attribute Scoping" name="scoping">
+                            <field name="attribute_scope_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle" />
+                                    <field name="attribute_id" />
+                                    <field name="is_scoped" />
+                                    <field name="is_required" />
+                                    <field name="label" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pim_channel_view_search" model="ir.ui.view">
+        <field name="name">pim.channel.search</field>
+        <field name="model">pim.channel</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="code" />
+                <filter
+                    name="inactive"
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="pim_channel_action" model="ir.actions.act_window">
+        <field name="name">Channels</field>
+        <field name="res_model">pim.channel</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="pim_channel_menu_root"
+        name="PIM"
+        sequence="85"
+        groups="group_pim_channel_user"
+    />
+    <menuitem
+        id="pim_channel_menu_config"
+        name="Configuration"
+        parent="pim_channel_menu_root"
+        sequence="90"
+        groups="group_pim_channel_manager"
+    />
+    <menuitem
+        id="pim_channel_menu_channels"
+        name="Channels"
+        parent="pim_channel_menu_config"
+        action="pim_channel_action"
+        sequence="10"
+    />
+</odoo>

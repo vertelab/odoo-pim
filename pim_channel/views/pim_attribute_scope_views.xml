@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Vertel AB
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="pim_attribute_scope_view_list" model="ir.ui.view">
+        <field name="name">pim.attribute.scope.list</field>
+        <field name="model">pim.attribute.scope</field>
+        <field name="arch" type="xml">
+            <list string="Attribute Scoping">
+                <field name="channel_id" />
+                <field name="attribute_id" />
+                <field name="is_scoped" />
+                <field name="is_required" />
+                <field name="label" />
+                <field name="sequence" widget="handle" />
+            </list>
+        </field>
+    </record>
+
+    <record id="pim_attribute_scope_view_form" model="ir.ui.view">
+        <field name="name">pim.attribute.scope.form</field>
+        <field name="model">pim.attribute.scope</field>
+        <field name="arch" type="xml">
+            <form string="Attribute Scoping">
+                <sheet>
+                    <group>
+                        <field name="channel_id" />
+                        <field name="attribute_id" />
+                        <field name="is_scoped" />
+                        <field name="is_required" invisible="not is_scoped" />
+                        <field name="label" />
+                        <field name="sequence" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pim_attribute_scope_view_search" model="ir.ui.view">
+        <field name="name">pim.attribute.scope.search</field>
+        <field name="model">pim.attribute.scope</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="channel_id" />
+                <field name="attribute_id" />
+                <filter
+                    name="scoped"
+                    string="Scoped"
+                    domain="[('is_scoped', '=', True)]"
+                />
+                <filter
+                    name="required"
+                    string="Required"
+                    domain="[('is_required', '=', True)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="pim_attribute_scope_action" model="ir.actions.act_window">
+        <field name="name">Attribute Scoping</field>
+        <field name="res_model">pim.attribute.scope</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="pim_attribute_scope_menu"
+        name="Attribute Scoping"
+        parent="pim_channel_menu_config"
+        action="pim_attribute_scope_action"
+        sequence="20"
+    />
+</odoo>

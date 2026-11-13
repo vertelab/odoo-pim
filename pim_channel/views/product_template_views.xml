@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Vertel AB
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!-- Channel selector + resolved values on the product form -->
+    <record id="product_template_form_view_pim_channel" model="ir.ui.view">
+        <field name="name">product.template.form.pim.channel</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="Channels"
+                    name="pim_channels"
+                    groups="pim_channel.group_pim_channel_user"
+                >
+                    <group>
+                        <field name="pim_channel_id" readonly="1" />
+                    </group>
+                    <group string="Resolved Values">
+                        <field name="pim_channel_resolved" widget="json" />
+                        <field name="pim_channel_inherited" widget="json" />
+                    </group>
+                    <div
+                        class="text-muted"
+                        colspan="2"
+                    >Select a channel in the context to see channel values. Inherited attributes are shown in the inherited list.</div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Channel column in the product list -->
+    <record id="product_template_tree_view_pim_channel" model="ir.ui.view">
+        <field name="name">product.template.list.pim.channel</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field
+                    name="pim_channel_id"
+                    optional="hide"
+                    groups="pim_channel.group_pim_channel_user"
+                />
+            </field>
+        </field>
+    </record>
+
+    <!-- Search filters -->
+    <record id="product_template_search_view_pim_channel" model="ir.ui.view">
+        <field name="name">product.template.search.pim.channel</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view" />
+        <field name="arch" type="xml">
+            <filter name="filter_to_sell" position="after">
+                <separator />
+                <filter
+                    name="pim_missing_own_value"
+                    string="Missing own value in channel"
+                    domain="[('pim_channel_inherited', '=', True)]"
+                    groups="pim_channel.group_pim_channel_user"
+                    help="Products that inherit the base value instead of having their own value in the selected channel and attribute."
+                />
+                <filter
+                    name="pim_has_own_value"
+                    string="Has own value in channel"
+                    domain="[('pim_channel_inherited', '=', False)]"
+                    groups="pim_channel.group_pim_channel_user"
+                />
+            </filter>
+        </field>
+    </record>
+</odoo>

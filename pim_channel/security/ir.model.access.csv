@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pim_channel_user,pim.channel.user,model_pim_channel,base.group_user,1,0,0,0
+access_pim_channel_manager,pim.channel.manager,model_pim_channel,group_pim_channel_manager,1,1,1,1
+access_pim_attribute_scope_user,pim.attribute.scope.user,model_pim_attribute_scope,base.group_user,1,0,0,0
+access_pim_attribute_scope_manager,pim.attribute.scope.manager,model_pim_attribute_scope,group_pim_channel_manager,1,1,1,1
+access_pim_channel_value_user,pim.channel.value.user,model_pim_channel_value,group_pim_channel_user,1,1,1,1
+access_pim_channel_value_manager,pim.channel.value.manager,model_pim_channel_value,group_pim_channel_manager,1,1,1,1
