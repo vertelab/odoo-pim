@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Vertel AB
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="pim_change_policy_view_list" model="ir.ui.view">
+        <field name="name">pim.change.policy.list</field>
+        <field name="model">pim.change.policy</field>
+        <field name="arch" type="xml">
+            <list string="Change Policies">
+                <field name="categ_id" />
+                <field name="channel_id" />
+                <field name="attribute_id" />
+                <field name="review_group_id" />
+                <field name="allow_self_review" />
+                <field name="active" widget="boolean_toggle" />
+            </list>
+        </field>
+    </record>
+
+    <record id="pim_change_policy_view_form" model="ir.ui.view">
+        <field name="name">pim.change.policy.form</field>
+        <field name="model">pim.change.policy</field>
+        <field name="arch" type="xml">
+            <form string="Change Policy">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1><field name="name" readonly="1" /></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="categ_id" />
+                            <field name="channel_id" />
+                            <field name="attribute_id" />
+                        </group>
+                        <group>
+                            <field name="review_group_id" />
+                            <field name="allow_self_review" />
+                            <field name="active" widget="boolean_toggle" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pim_change_policy_view_search" model="ir.ui.view">
+        <field name="name">pim.change.policy.search</field>
+        <field name="model">pim.change.policy</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="categ_id" />
+                <field name="channel_id" />
+                <field name="attribute_id" />
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]" />
+            </search>
+        </field>
+    </record>
+
+    <record id="pim_change_policy_action" model="ir.actions.act_window">
+        <field name="name">Change Policies</field>
+        <field name="res_model">pim.change.policy</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="pim_change_policy_menu"
+        name="Change Policies"
+        parent="pim_channel.pim_channel_menu_config"
+        action="pim_change_policy_action"
+        sequence="40"
+    />
+</odoo>

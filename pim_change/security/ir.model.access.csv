@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pim_change_policy_user,pim.change.policy.user,model_pim_change_policy,base.group_user,1,0,0,0
+access_pim_change_policy_manager,pim.change.policy.manager,model_pim_change_policy,group_pim_change_manager,1,1,1,1
+access_pim_change_proposal_user,pim.change.proposal.user,model_pim_change_proposal,group_pim_change_user,1,1,1,0
+access_pim_change_proposal_manager,pim.change.proposal.manager,model_pim_change_proposal,group_pim_change_manager,1,1,1,0
+access_pim_change_confirm_wizard,pim.change.confirm.wizard,model_pim_change_confirm_wizard,group_pim_change_user,1,1,1,1

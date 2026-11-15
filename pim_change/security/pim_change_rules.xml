@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Vertel AB
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!-- An author sees their own proposals; a reviewer sees the proposals
+         their group is responsible for. Managers see everything. -->
+    <record id="rule_pim_change_proposal_author" model="ir.rule">
+        <field name="name">PIM change proposal: own proposals</field>
+        <field name="model_id" ref="model_pim_change_proposal" />
+        <field name="domain_force">[('proposed_by_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_pim_change_user'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <!-- A reviewer must be able to read and write the proposals they review,
+         even when they are not the author. Rules are OR-ed per operation. -->
+    <record id="rule_pim_change_proposal_reviewer" model="ir.rule">
+        <field name="name">PIM change proposal: reviewer access</field>
+        <field name="model_id" ref="model_pim_change_proposal" />
+        <field name="domain_force">[('state', '=', 'sent')]</field>
+        <field name="groups" eval="[(4, ref('group_pim_change_reviewer'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_pim_change_proposal_manager" model="ir.rule">
+        <field name="name">PIM change proposal: all (manager)</field>
+        <field name="model_id" ref="model_pim_change_proposal" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_pim_change_manager'))]" />
+    </record>
+</odoo>

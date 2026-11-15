@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Vertel AB
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="pim_change_proposal_view_list" model="ir.ui.view">
+        <field name="name">pim.change.proposal.list</field>
+        <field name="model">pim.change.proposal</field>
+        <field name="arch" type="xml">
+            <list string="Change Proposals">
+                <field name="name" />
+                <field name="product_tmpl_id" />
+                <field name="attribute_id" />
+                <field name="channel_id" />
+                <field name="lang_id" />
+                <field name="state" widget="badge" />
+                <field name="proposed_by_id" />
+                <field name="reviewed_by_id" />
+                <field name="conflict" />
+                <field name="create_date" />
+            </list>
+        </field>
+    </record>
+
+    <record id="pim_change_proposal_view_form" model="ir.ui.view">
+        <field name="name">pim.change.proposal.form</field>
+        <field name="model">pim.change.proposal</field>
+        <field name="arch" type="xml">
+            <form string="Change Proposal">
+                <header>
+                    <button name="action_send" type="object" string="Send for review" class="btn-primary" invisible="state != 'draft'" />
+                    <button name="action_reset_draft" type="object" string="Withdraw" invisible="state != 'sent'" />
+                    <button name="action_approve" type="object" string="Approve" class="btn-primary" invisible="state != 'sent'" />
+                    <button name="action_reject" type="object" string="Reject" invisible="state != 'sent'" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,approved,rejected" />
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert" invisible="not conflict">
+                        The product value changed after this proposal was created.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_tmpl_id" />
+                            <field name="attribute_id" />
+                            <field name="channel_id" />
+                            <field name="lang_id" />
+                        </group>
+                        <group>
+                            <field name="proposed_by_id" />
+                            <field name="reviewed_by_id" />
+                            <field name="reviewed_on" />
+                            <field name="conflict" />
+                        </group>
+                    </group>
+                    <group string="Values">
+                        <field name="old_value" nolabel="1" colspan="2" readonly="1" />
+                        <field name="new_value" nolabel="1" colspan="2" />
+                    </group>
+                    <group string="Comment">
+                        <field name="comment" nolabel="1" colspan="2" placeholder="Required when rejecting" />
+                    </group>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <record id="pim_change_proposal_view_search" model="ir.ui.view">
+        <field name="name">pim.change.proposal.search</field>
+        <field name="model">pim.change.proposal</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_tmpl_id" />
+                <field name="attribute_id" />
+                <field name="channel_id" />
+                <field name="proposed_by_id" />
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" />
+                <filter name="sent" string="Sent" domain="[('state', '=', 'sent')]" />
+                <filter name="approved" string="Approved" domain="[('state', '=', 'approved')]" />
+                <filter name="rejected" string="Rejected" domain="[('state', '=', 'rejected')]" />
+                <filter name="mine" string="My proposals" domain="[('proposed_by_id', '=', uid)]" />
+                <filter name="conflict" string="Conflict" domain="[('conflict', '=', True)]" />
+                <group expand="0" string="Group By">
+                    <filter name="group_state" string="State" context="{'group_by': 'state'}" />
+                    <filter name="group_channel" string="Channel" context="{'group_by': 'channel_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="pim_change_proposal_action" model="ir.actions.act_window">
+        <field name="name">Change Proposals</field>
+        <field name="res_model">pim.change.proposal</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="pim_change_proposal_action_review" model="ir.actions.act_window">
+        <field name="name">Review Queue</field>
+        <field name="res_model">pim.change.proposal</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'sent')]</field>
+        <field name="context">{'search_default_sent': 1}</field>
+    </record>
+
+    <menuitem
+        id="pim_change_menu_root"
+        name="Changes"
+        parent="pim_channel.pim_channel_menu_root"
+        sequence="30"
+        groups="group_pim_change_user"
+    />
+    <menuitem
+        id="pim_change_menu_mine"
+        name="My Proposals"
+        parent="pim_change_menu_root"
+        action="pim_change_proposal_action"
+        sequence="10"
+    />
+    <menuitem
+        id="pim_change_menu_review"
+        name="Review Queue"
+        parent="pim_change_menu_root"
+        action="pim_change_proposal_action_review"
+        sequence="20"
+        groups="group_pim_change_reviewer"
+    />
+</odoo>
